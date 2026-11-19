@@ -1,0 +1,139 @@
+/* mysite stylesheet: side rail design. Intent and values are recorded in docs/ui-spec.md section 13.
+
+   Scaling: every size is in rem and the root font size grows with the viewport, so
+   laptops and large monitors get the same design at proportional scale. Two-column
+   layouts are chosen by container queries (available space, measured in rem), not by
+   fixed viewport widths. Phones get their own layout at the bottom.
+
+   Type: monospace for the "chrome" (nav, labels, dates, headings), a system sans for
+   reading text (.prose). No web fonts. */
+
+/* ---- tokens ---- */
+:root {
+  color-scheme: dark;
+  --bg: #16181b;
+  --surface: #1d2024;
+  --line: #2c3036;
+  --hover: #22262a;
+  --text: #c9cdd2;
+  --heading: #e4e7ea;
+  --muted: #8a929b;
+  --accent: #5aa9b3;
+  --warn: #d9822b;
+  --font: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --font-prose: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  /* spacing: 4 / 8 / 16 / 24 / 40px at a 14px root */
+  --s1: .29rem;
+  --s2: .57rem;
+  --s3: 1.14rem;
+  --s4: 1.71rem;
+  --s5: 2.86rem;
+
+  --rail: 15rem;    /* rail width */
+  --page: 78rem;    /* content column cap */
+  --radius: 3px;    /* interactive elements only */
+  --target: 3rem;   /* minimum height of nav items and buttons (>= 44px) */
+}
+
+/* ---- base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+/* 15px at 1280px wide, ~18.5px at 1920px, 22px at 2560px and up. rem-based, so the
+   browser's own font-size setting still applies. */
+html { font-size: clamp(.9375rem, .5rem + .547vw, 1.375rem); -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 1rem/1.6 var(--font); }
+a { color: inherit; text-decoration: none; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: -9999px; top: 0; }
+.skip:focus { left: var(--s3); top: var(--s3); z-index: 1; padding: var(--s2) var(--s3); background: var(--surface); color: var(--heading); }
+
+/* ---- layout: sticky rail + main ---- */
+.site { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); min-height: 100vh; }
+
+.rail { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; padding: var(--s4) var(--s2); background: var(--surface); border-right: 1px solid var(--line); }
+.brand { display: block; margin-bottom: var(--s2); padding: 0 var(--s2) var(--s3); border-bottom: 1px solid var(--line); }
+.wordmark { display: block; font-size: 1.1rem; font-weight: 600; letter-spacing: .02em; color: var(--heading); }
+.role { display: block; margin-top: .15rem; font-size: .8rem; color: var(--muted); }
+.group { margin: var(--s3) var(--s2) var(--s1); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.rail .item { display: flex; align-items: center; min-height: var(--target); padding: 0 var(--s2); border-radius: var(--radius); font-size: .93rem; color: var(--text); transition: background-color .15s, color .15s; }
+.rail .item:hover { background: var(--hover); color: var(--heading); }
+.rail .item[aria-current="page"] { background: var(--hover); color: var(--heading); box-shadow: inset 2px 0 0 var(--accent); }
+.rail .ext { color: var(--muted); }
+.rail .ext:hover { color: var(--accent); }
+
+main { display: flex; flex-direction: column; min-width: 0; padding: var(--s5) var(--s5) var(--s4); }
+.content { flex: 1; width: 100%; max-width: var(--page); margin: 0 auto; container-type: inline-size; }
+footer { display: flex; justify-content: space-between; width: 100%; max-width: var(--page); margin: var(--s5) auto 0; padding-top: var(--s3); border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); }
+
+/* ---- type ---- */
+h1 { margin: 0 0 var(--s2); font-size: 1.6rem; line-height: 1.25; font-weight: 600; color: var(--heading); }
+h1.display { margin-bottom: var(--s4); font-size: 2.2rem; letter-spacing: -.01em; text-wrap: balance; }
+h2 { margin: var(--s5) 0 var(--s2); font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+p { margin: 0 0 var(--s3); }
+.caption { margin: 0 0 var(--s4); font-size: .86rem; color: var(--muted); }
+.prose { font-family: var(--font-prose); font-size: 1.1rem; line-height: 1.7; }
+.prose p { max-width: 62ch; }
+.prose .lead { font-size: 1.3rem; line-height: 1.55; color: var(--heading); }
+.crumb { margin-bottom: var(--s3); font-size: .8rem; letter-spacing: .04em; color: var(--muted); }
+.crumb a { color: var(--accent); }
+.link { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; transition: color .15s; }
+.link:hover { color: var(--heading); }
+.btn { display: inline-flex; align-items: center; gap: .4em; min-height: var(--target); padding: 0 var(--s3); border: 1px solid var(--accent); border-radius: var(--radius); font-family: var(--font); font-size: .93rem; color: var(--accent); transition: background-color .15s, color .15s; }
+.btn:hover { background: var(--accent); color: var(--bg); }
+.more { margin-top: var(--s3); }
+
+/* ---- lists ---- */
+.entries { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.entry { border-bottom: 1px solid var(--line); }
+.entry a { display: block; margin: 0 calc(-1 * var(--s2)); padding: var(--s3) var(--s2); border-radius: var(--radius); transition: background-color .15s; }
+.entry a:hover { background: var(--hover); }
+.entry time { display: block; font-size: .8rem; letter-spacing: .06em; color: var(--muted); }
+.entry .title { color: var(--heading); }
+.entry a:hover .title { color: var(--accent); }
+
+/* ---- detail lists (home "at a glance", post details) ---- */
+.facts dl, .meta dl { display: grid; grid-template-columns: auto 1fr; gap: var(--s1) var(--s3); margin: 0; }
+.facts dt, .meta dt { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; line-height: 1.9; color: var(--muted); }
+.facts dd, .meta dd { margin: 0; }
+.facts h2 { margin-top: 0; }
+.side .latest h2 { margin-top: var(--s4); }
+
+.home-grid { margin-top: var(--s2); }
+/* post details sit above the text on small containers, in a right column on wide ones */
+.post-grid { display: grid; gap: var(--s3); }
+.meta { padding-bottom: var(--s3); border-bottom: 1px solid var(--line); }
+.end { margin-top: var(--s4); font-family: var(--font); font-size: .93rem; }
+
+.empty { margin: 0; padding: var(--s4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--muted); }
+.status { margin: 0 0 var(--s3); font-size: 2.3rem; line-height: 1; font-weight: 700; letter-spacing: .02em; color: var(--warn); }
+
+/* ---- wide containers (laptops and monitors share these): use the room ---- */
+@container (min-width: 60rem) {
+  /* Home: text left, "at a glance" and latest thought right */
+  .home-grid { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; gap: var(--s5); align-items: start; }
+
+  /* Post: text left, details right */
+  .post-grid { grid-template-columns: minmax(0, 1fr) 16rem; gap: var(--s5); align-items: start; }
+  .post-grid .body { grid-column: 1; grid-row: 1; }
+  .post-grid .meta { grid-column: 2; grid-row: 1; padding: var(--s2) 0 0; border-top: 1px solid var(--line); border-bottom: 0; }
+
+  /* Thoughts: date and title on one row, arrow on hover */
+  .entries-rows .entry a { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; align-items: baseline; gap: var(--s3); }
+  .entries-rows .entry a::after { content: "\2192"; color: var(--accent); opacity: 0; transition: opacity .15s; }
+  .entries-rows .entry a:hover::after { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---- phones: the rail becomes a top bar ---- */
+@media (max-width: 640px) {
+  .site { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .rail { position: static; height: auto; overflow: visible; flex-direction: row; flex-wrap: wrap; align-items: center; padding: var(--s2) var(--s3); border-right: 0; border-bottom: 1px solid var(--line); }
+  .brand { margin: 0 var(--s3) 0 0; padding: 0; border: 0; }
+  .role, .group { display: none; }
+  .rail .item[aria-current="page"] { box-shadow: inset 0 -2px 0 var(--accent); }
+  main { padding: var(--s4) var(--s3); }
+  h1.display { font-size: 1.8rem; }
+}

@@ -1,0 +1,17 @@
+{{/*
+  thoughts.html: GET /thoughts
+  Data: ThoughtsPage { Page; Posts []store.Post }  (newest first; nil or empty is fine)
+*/}}
+{{define "content"}}
+      <h1>Thoughts</h1>
+      <p class="caption">{{len .Posts}} {{if eq (len .Posts) 1}}entry{{else}}entries{{end}}{{if .Posts}}, newest first{{end}}.</p>
+{{if .Posts}}
+      <ul class="entries entries-rows">
+{{range .Posts}}
+        <li class="entry"><a href="/thoughts/{{.Slug}}"><time datetime="{{.CreatedAt.Format "2006-01-02"}}">{{.CreatedAt.Format "2006-01-02"}}</time><span class="title">{{.Title}}</span></a></li>
+{{end}}
+      </ul>
+{{else}}
+      <p class="empty">No posts yet</p>
+{{end}}
+{{end}}

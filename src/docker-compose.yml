@@ -1,0 +1,13 @@
+services:
+  go-site:
+    build:
+      context: ..
+      dockerfile: src/Dockerfile
+    container_name: go-web-server
+    ports:
+      - "127.0.0.1:9432:3000"
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+    volumes:
+      - ../data:/app/data

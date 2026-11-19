@@ -1,0 +1,25 @@
+{{/*
+  post.html: GET /thoughts/{slug}
+  Data: PostPage { Page; Post store.Post; Paragraphs []string }
+  Paragraphs is Post.Body split on blank lines by the handler. Everything is
+  auto-escaped by html/template; never convert Body to template.HTML.
+  Layout: the posted date sits above the text on small containers and in a
+  right-hand column on wide ones (see .post-grid in style.css).
+*/}}
+{{define "content"}}
+      <div class="crumb"><a href="/thoughts">&larr; Thoughts</a></div>
+      <h1 class="display">{{.Post.Title}}</h1>
+      <div class="post-grid">
+        <aside class="meta" aria-label="Post details">
+          <dl>
+            <dt>Posted</dt><dd><time datetime="{{.Post.CreatedAt.Format "2006-01-02"}}">{{.Post.CreatedAt.Format "2006-01-02"}}</time></dd>
+          </dl>
+        </aside>
+        <div class="body prose">
+{{range .Paragraphs}}
+          <p>{{.}}</p>
+{{end}}
+          <p class="end"><a class="link" href="/thoughts">&larr; All thoughts</a></p>
+        </div>
+      </div>
+{{end}}

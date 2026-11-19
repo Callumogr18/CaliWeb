@@ -7,16 +7,20 @@ import "net/http"
 func NewRouter() *http.ServeMux {
 	router := http.NewServeMux()
 
-	// User endpoints
-	router.HandleFunc("GET /{$}", home)
-	router.HandleFunc("GET /projects", projects)
-	router.HandleFunc("GET /thoughts", feed)
+	// User pages (HTML)
+	router.HandleFunc("GET /{$}", showHome)
+	router.HandleFunc("GET /projects", showProjects)
+	router.HandleFunc("GET /thoughts", showThoughts)
+	router.HandleFunc("GET /thoughts/{slug}", showPost)
 
-	// Admin endpoints (TODO)
+	// Stylesheet for the pages
+	router.HandleFunc("GET /static/style.css", styleSheet)
+
+	// Admin endpoints (TODO). Still JSON: there is no UI for writing yet.
 	router.HandleFunc("POST /thoughts/new", createPostRouter)
 
-	// 404
-	router.HandleFunc("/", notFound)
+	// 404 page
+	router.HandleFunc("/", showNotFound)
 
 	return router
 }

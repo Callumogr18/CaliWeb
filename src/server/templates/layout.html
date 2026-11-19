@@ -1,0 +1,42 @@
+{{/*
+  layout.html: the shared page shell. Parsed together with exactly one page file
+  (home, thoughts, post, projects, notfound, error), which defines the "content" block.
+  Execute the "layout" template.
+
+  Data (every page's data struct embeds Page):
+    .Title   string  page title; empty means just "Cali Land"
+    .Active  string  "home" | "thoughts" | "projects" | "" (marks the nav item)
+    .Year    int     footer year
+*/}}
+{{define "layout"}}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Callum's personal site: software, thoughts and projects.">
+<meta name="theme-color" content="#16181b">
+<title>{{if .Title}}{{.Title}} · {{end}}Cali Land</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="site">
+  <nav class="rail" aria-label="Main">
+    <a class="brand" href="/"><span class="wordmark">Callum O'Gorman</span><span class="role">Software engineer, Limerick</span></a>
+    <p class="group">Pages</p>
+    <a class="item" href="/"{{if eq .Active "home"}} aria-current="page"{{end}}>Home</a>
+    <a class="item" href="/thoughts"{{if eq .Active "thoughts"}} aria-current="page"{{end}}>Thoughts</a>
+    <a class="item" href="/projects"{{if eq .Active "projects"}} aria-current="page"{{end}}>Projects</a>
+    <p class="group">Elsewhere</p>
+    <a class="item ext" href="https://github.com/Callumogr18" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab)</span></a>
+    <a class="item ext" href="https://www.linkedin.com/in/callumogorman/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span><span class="sr"> (opens in a new tab)</span></a>
+  </nav>
+  <main id="content">
+    <div class="content">
+{{template "content" .}}
+    </div>
+    <footer><span>Limerick</span><span>{{.Year}}</span></footer>
+  </main>
+</div>
+</body>
+</html>{{end}}

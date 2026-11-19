@@ -1,0 +1,41 @@
+{{/*
+  home.html: GET /
+  Data: HomePage { Page; Latest *store.Post }  (Latest is nil when there are no posts)
+  Layout: intro on the left; "At a glance" and "Latest thought" on the right when the
+  window is wide, stacked otherwise (see .home-grid in style.css).
+*/}}
+{{define "content"}}
+      <h1 class="display">Hi, I'm Callum.</h1>
+      <div class="home-grid">
+        <div class="prose">
+          <p class="lead">I'm a junior dev currently working in Limerick. I completed my undergrad in MTU in Cork, where I spent 4 great years.</p>
+          <p>I don't know what the purpose of this site will be, but I'm going to add to it and hopefully it will be a good representation of what kind of person and engineer I am.</p>
+          <p>I am fascinated by AI &amp; ML, ever more so given the developments over the last few years in the field. I am also interested in systems programming and trying to do more projects in the space.</p>
+          <p>At the time of beginning the development of this site, building software as we knew it is changing. We can see how that change happens together, amongst the doom and gloom I think there is much to be excited about.</p>
+          <p>Outside of my passion for software, I support Manchester United...unfortunately. I also recently began to read more and would appreciate recommendations.</p>
+          <p><a class="btn" href="https://www.linkedin.com/in/callumogorman/" target="_blank" rel="noopener noreferrer">Say hello <span aria-hidden="true">↗</span><span class="sr"> (opens LinkedIn in a new tab)</span></a></p>
+        </div>
+        <div class="side">
+          <section class="facts">
+            <h2>At a glance</h2>
+            <dl>
+              <dt>Based</dt><dd>Limerick, Ireland</dd>
+              <dt>Role</dt><dd>Junior engineer</dd>
+              <dt>Studied</dt><dd>MTU, Cork</dd>
+              <dt>Into</dt><dd>Soccer &amp; Coffee</dd>
+            </dl>
+          </section>
+          <section class="latest">
+            <h2>Latest thought</h2>
+{{with .Latest}}
+            <ul class="entries">
+              <li class="entry"><a href="/thoughts/{{.Slug}}"><time datetime="{{.CreatedAt.Format "2006-01-02"}}">{{.CreatedAt.Format "2006-01-02"}}</time><span class="title">{{.Title}}</span></a></li>
+            </ul>
+            <p class="more"><a class="link" href="/thoughts">All thoughts</a></p>
+{{else}}
+            <p class="empty">No posts yet</p>
+{{end}}
+          </section>
+        </div>
+      </div>
+{{end}}
